@@ -1,5 +1,4 @@
 function solution(array, n) {
-    array.push(n);
-    let idx = array.sort().findIndex(x => x === n);
-    return array[idx] - array[idx - 1] > array[idx + 1] - array[idx] ? array[idx + 1] : array[idx - 1];
+    const diffArr = array.sort((a,b) => a-b).map(val => Math.abs(val - n));
+    return array[diffArr.indexOf(Math.min(...diffArr))];
 }
