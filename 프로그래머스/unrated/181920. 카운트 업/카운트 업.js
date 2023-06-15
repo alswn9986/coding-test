@@ -1,3 +1,3 @@
 function solution(start, end) {
-    return Array(end-start+1).fill(start).map((x, i) => x + i);
+    return Array.from({length: end-start+1}, () => start++);
 }
