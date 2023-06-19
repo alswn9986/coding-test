@@ -1,41 +1,31 @@
 function solution(n, lost, reserve) {
-    let answer = n - lost.length;
-    let temp = lost.map(x => {
-        if (reserve.includes(x)) {
-            reserve.splice(reserve.indexOf(x), 1);
-            answer++;
-            return [];
-        } else {
-            return [x-1, x+1];
-        }
-    });
-    temp.forEach(([a, b], i) => {
-        const spliceReserve = (idx) => {
-            reserve.splice(idx, 1);
-            answer++;
-        }
-        
-        let target = b;
-        let aIdx = reserve.indexOf(a);
-        let bIdx = reserve.indexOf(b);
-        
-        if (aIdx === -1 && bIdx === -1) {
-            return;
-        }
-        
-        if (aIdx !== -1 && bIdx !== -1) {
-            let aLen = temp.slice(i + 1).flat().filter(v => v === a).length;
-            let bLen = temp.slice(i + 1).flat().filter(v => v === b).length;
-            if (aLen < bLen) {
-                spliceReserve(aIdx);
-            } else {
-                spliceReserve(bIdx);
-            }
-        } else if (aIdx !== -1) {
-            spliceReserve(aIdx);
-        } else if (bIdx !== -1) {
-            spliceReserve(bIdx);
-        }
-    });
-    return answer;
+  // 학생들의 체육복 상태를 나타내는 배열 생성 및 초기화
+  const status = Array(n).fill(1);
+
+  // 도난당한 학생들의 체육복 상태를 0으로 설정
+  for (const lostIdx of lost) {
+    status[lostIdx - 1] -= 1;
+  }
+
+  // 여벌의 체육복을 가진 학생들의 체육복 상태를 1로 설정
+  for (const reserveIdx of reserve) {
+    status[reserveIdx - 1] += 1;
+  }
+
+  // 체육복을 빌려주는 과정
+  for (let i = 0; i < n; i++) {
+    if (status[i] === 0) {
+      if (status[i - 1] === 2) {
+        status[i] = 1;
+        status[i - 1] = 1;
+      } else if (status[i + 1] === 2) {
+        status[i] = 1;
+        status[i + 1] = 1;
+      }
+    }
+  }
+
+  // 체육수업을 들을 수 있는 학생 수 계산
+  const answer = status.filter((s) => s > 0).length;
+  return answer;
 }
