@@ -1,19 +1,18 @@
 function solution(today, terms, privacies) {
-  const answer = [];
-  const expire = new Date(today);
-
-  const termType = {};
-  terms.forEach((item) => {
-    const [type, term] = item.split(" ");
-    termType[type] = Number(term);
-  });
-
-  privacies.forEach((item, idx) => {
-    const [date, type] = item.split(" ");
-    const chDate = new Date(date);
-    chDate.setMonth(chDate.getMonth() + termType[type]);
-    if (chDate <= expire) answer.push(idx + 1);
-  });
-
-  return answer;
+    const term = {};
+    terms.forEach(t => {
+        const [type, month] = t.split(' ');
+        term[type] = Number(month);
+    });
+    
+    const todayDate = new Date(today);
+    return privacies.reduce((acc, curr, idx) => {
+        const [date, type] = curr.split(' ');
+        const acceptDate = new Date(date);
+        acceptDate.setMonth(acceptDate.getMonth() + term[type]);
+        if (todayDate >= acceptDate) {
+            acc.push(idx + 1);
+        }
+        return acc;
+    }, []);
 }
